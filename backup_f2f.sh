@@ -177,7 +177,7 @@ case $1 in
 		;;
 	"-p") copyOnly $DIR_ORIG $DIR_DEST $BKP_NAME $LOG
 		;;
-	"-v") echo "Versão 0.1.5_beta"
+	"-v") echo "Versão 0.1.8_beta"
 		;;
 	   *) echo -e "$NOTICE OPÇÃO INVÁLIDA." ; exit 1  ;; 
 esac
