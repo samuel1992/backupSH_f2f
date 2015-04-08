@@ -28,7 +28,7 @@ showChoice(){
 read -p "Deseja deletar o log dos itens transitados ?" CHOICE
 
 if [ $CHOICE == "s" ]; then
-	echo -e "$(date +"%d-%m-%Y %H:%M:%S") $INFO Removendo o arquivo $1" ; rm $1
+	echo -e "$(date +"%d-%m-%Y %H:%M:%S") $INFO Removendo o arquivo $1" ; rm "$1"
 else
 	echo -e "$(date +"%d-%m-%Y %H:%M:%S") $INFO O arquivo de log foi armazenado em $1"
 fi
@@ -48,17 +48,20 @@ cd $DIR_ORIG ; find . -name "* *" | while read i; do novo=`echo $i | tr ' ' '_'`
 #
 compactAndRemove(){
 
+removeSpaces $1 #removendo os espaços da origem
+
+#compactando os arquivos solicitados
 tar -czpf $2$3 $1
+#gerando lista dos arquivos compactados
 tar -tf $2$3 > $4
 
-removeSpaces $1 #removendo os espaços da origem
 #LOOP DENTRO DO LOG GERADO COM OS ARQUIVOS QUE ESTAO COMPACTADOS
 for i in $(cat $4); 
 do
 	if test -f /$i; 
 	then
 		echo -e "$(date +"%d-%m-%Y %H:%M:%S") $INFO Removendo o item => /$i" ; 
-		rm /$i ;
+		rm "/$i" ;
 	else
 		echo -e "$(date +"%d-%m-%Y %H:%M:%S") $NOTICE O item /$i não é um arquivo valido ";
 	fi
@@ -76,10 +79,13 @@ exit
 #
 compactOnly(){
 
+removeSpaces $1 #removendo os espaços da origem
+
+#compactando os arquivos solicitados
 tar -czpf $2$3 $1
+#gerando lista dos arquivos que foram compactados
 tar -tf $2$3 > $4
 
-removeSpaces $1 #removendo os espaços da origem
 #LOOP DENTRO DO LOG GERADO COM OS ARQUIVOS QUE ESTAO COMPACTADOS
 for i in $(cat $4); 
 do
@@ -98,6 +104,9 @@ exit
 #FUNCAO PARA COPIAR OS ARQUIVOS E REMOVER OS ORIGINAIS COM SEGURANCA
 #
 copyAndRemove(){
+
+removeSpaces $1 #removendo os spacos dos nomes dos arquivos antes de fazer as operacoes
+
 #criando o novo diretorio de backup
 mkdir $2$3
 
@@ -128,6 +137,9 @@ exit
 #FUNCAO PARA COPIAR OS ARQUIVOS E NÃO REMOVER DO ORIGINAL
 #
 copyOnly(){
+
+removeSpaces $1 #removendo os spacos no nome dos arquivos	
+	
 #criando o novo diretorio de backup
 mkdir $2$3
 
